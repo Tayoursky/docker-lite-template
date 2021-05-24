@@ -1,0 +1,25 @@
+FROM php:7.4-cli
+
+RUN apt-get update && apt-get install -y \
+        libicu-dev \
+        curl wget git \
+        libfreetype6-dev \
+        libjpeg62-turbo-dev \
+        libmcrypt-dev \
+        libzip-dev zip unzip \
+        libmagickwand-dev --no-install-recommends \
+    && pecl install imagick \
+    && docker-php-ext-enable imagick \
+	&& docker-php-ext-configure zip  \
+	&& docker-php-ext-install zip \
+	&& docker-php-ext-configure intl \
+    && docker-php-ext-install intl \
+    && docker-php-ext-install pdo_mysql opcache \
+    && docker-php-ext-configure gd  --with-jpeg  --with-freetype  \
+    && docker-php-ext-install gd \
+    && pecl install xdebug \
+    && docker-php-ext-enable xdebug
+
+RUN wget https://getcomposer.org/installer -O - -q | php -- --version=1.9.1 --install-dir=/bin --filename=composer --quiet
+
+WORKDIR /var/www

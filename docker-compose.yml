@@ -1,0 +1,52 @@
+version: '3.7'
+
+services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    volumes:
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./:/var/www/
+    ports:
+      - 80:80
+    links:
+      - php-fpm
+
+  php-cli:
+    build:
+      context: ./
+      dockerfile: docker/php/php-cli.docker
+    container_name: php-cli
+    volumes:
+      - ./:/var/www/
+    links:
+      - mysql
+    environment:
+      - "DB_PORT=3306"
+      - "DB_HOST=mysql"
+    tty: true
+
+  php-fpm:
+    build:
+      context: ./
+      dockerfile: docker/php/php-fpm.docker
+    container_name: php-fpm
+    volumes:
+      - ./:/var/www
+    links:
+      - mysql
+
+  mysql:
+    image: mariadb
+    container_name: mariadb
+    volumes:
+      - ./storage/docker/mysql:/var/lib/mysql
+    environment:
+      TZ: 'Europe/Moscow'
+      MYSQL_ROOT_PASSWORD: 'secret'
+      MYSQL_USER: 'test'
+      MYSQL_PASSWORD: 'secret'
+      MYSQL_DATABASE: 'test'
+    ports:
+      - "3306:3306"
