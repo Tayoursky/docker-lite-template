@@ -8,6 +8,7 @@
     <title>Default page</title>
 </head>
 <body>
+<h1>Pending</h1>
 <?= phpinfo(); ?>
 </body>
 </html>
