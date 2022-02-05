@@ -2,8 +2,8 @@ version: '3.7'
 
 services:
   nginx:
-    image: nginx:latest
-    container_name: nginx
+    image: nginx:stable-alpine
+    container_name: nginx_lite
     volumes:
       - ./docker/nginx/conf.d:/etc/nginx/conf.d
       - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
@@ -17,7 +17,7 @@ services:
     build:
       context: ./
       dockerfile: docker/php/php-cli.docker
-    container_name: php-cli
+    container_name: php-cli_lite
     volumes:
       - ./:/var/www/
     links:
@@ -31,7 +31,7 @@ services:
     build:
       context: ./
       dockerfile: docker/php/php-fpm.docker
-    container_name: php-fpm
+    container_name: php-fpm_lite
     volumes:
       - ./:/var/www
     links:
@@ -39,7 +39,7 @@ services:
 
   mysql:
     image: mariadb
-    container_name: mariadb
+    container_name: mariadb_lite
     volumes:
       - ./storage/docker/mysql:/var/lib/mysql
     environment:
